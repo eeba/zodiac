@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover your Chinese zodiac sign based on your birthdate. Find your zodiac animal, learn about personality traits, and explore Chinese astrology. Free zodiac calculator.">
+    <meta name="keywords" content="Chinese zodiac calculator, find your zodiac sign, birthdate zodiac, Chinese astrology, zodiac animals, personality traits, Chinese New Year">
+    <meta name="author" content="My Chinese Zodiac">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="My Chinese Zodiac - Discover Your Sign">
+    <meta property="og:description" content="Enter your birthday and discover your Chinese zodiac sign with detailed personality insights.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>My Chinese Zodiac - Discover Your Chinese Zodiac Sign</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #c41e3a;
+            --primary-gold: #d4af37;
+            --light-gold: #f4d03f;
+            --dark-red: #8b0000;
+            --text-dark: #2c1810;
+            --text-light: #fff5e6;
+            --bg-cream: #fff8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-cream);
+        }
+
+        /* Chinese Pattern Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, var(--light-gold) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, var(--primary-gold) 1px, transparent 1px),
+                radial-gradient(circle at 40% 60%, var(--light-gold) 1px, transparent 1px),
+                radial-gradient(circle at 60% 40%, var(--primary-gold) 1px, transparent 1px);
+            background-size: 100px 100px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+            color: var(--text-light);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '龍';
+            font-size: 2rem;
+            color: var(--primary-gold);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--light-gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: var(--text-light);
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        .hero::before {
+            top: -100px;
+            left: -100px;
+        }
+
+        .hero::after {
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4rem;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .calculator-section h2 {
+            text-align: center;
+            color: var(--dark-red);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+        }
+
+        .year-input, .month-input, .day-input {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .calculate-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 2rem auto 0;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .calculate-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.3);
+        }
+
+        /* Result Section */
+        .result-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-section.success {
+            background: linear-gradient(135deg, #fff5e6, #ffd70033);
+            border: 2px solid var(--primary-gold);
+        }
+
+        .result-section.error {
+            background: #ffe6e6;
+            border: 2px solid var(--primary-red);
+        }
+
+        .zodiac-animal {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .zodiac-name {
+            font-size: 2.5rem;
+            color: var(--dark-red);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .zodiac-years {
+            font-size: 1.2rem;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .zodiac-traits {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .trait-badge {
+            background: var(--primary-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .zodiac-description {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            color: var(--dark-red);
+            font-weight: 600;
+        }
+
+        /* Zodiac Signs Grid */
+        .zodiac-signs-section {
+            margin-bottom: 4rem;
+        }
+
+        .zodiac-signs-section h2 {
+            text-align: center;
+            color: var(--dark-red);
+            font-size: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .zodiac-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--primary-gold);
+            cursor: pointer;
+        }
+
+        .zodiac-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .zodiac-card:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.3);
+        }
+
+        .zodiac-card .animal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .zodiac-card .card-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .zodiac-card .card-years {
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .zodiac-card .card-traits {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .zodiac-card .trait-badge {
+            background: var(--bg-cream);
+            color: var(--dark-red);
+            border: 1px solid var(--primary-gold);
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .zodiac-card .card-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* About Section */
+        .about-section {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 4rem;
+        }
+
+        .about-section h2 {
+            color: var(--dark-red);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .about-content h3 {
+            color: var(--primary-red);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+            color: var(--text-light);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-nav {
+            margin-bottom: 1rem;
+        }
+
+        .footer-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+            color: var(--light-gold);
+        }
+
+        .share-btn {
+            display: inline-block;
+            margin: 1rem 0;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-gold);
+            color: var(--dark-red);
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            background: var(--light-gold);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .calculator-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .zodiac-name {
+                font-size: 2rem;
+            }
+
+            .zodiac-animal {
+                font-size: 4rem;
+            }
+
+            .zodiac-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .calculator-section h2 {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <div class="header-content">
+            <div class="logo" aria-label="My Chinese Zodiac">
+                My Chinese Zodiac
+            </div>
+            <nav role="navigation" aria-label="Main navigation">
+                <ul>
+                    <li><a href="#calculator">Calculator</a></li>
+                    <li><a href="#zodiac-signs">Zodiac Signs</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" role="main" aria-labelledby="hero-title">
+        <h1 id="hero-title">Discover Your Chinese Zodiac Sign – Enter Your Birthday and Unlock Ancient Wisdom!</h1>
+        <p>Based on thousands of years of Chinese tradition, find out which of the 12 animals represents your personality, strengths, and destiny.</p>
+    </section>
+
+    <main>
+        <section id="calculator" class="calculator-section" aria-labelledby="calculator-title">
+            <h2 id="calculator-title">Find Your Chinese Zodiac</h2>
+            <form id="zodiacForm" aria-label="Zodiac calculator form">
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="year-input">
+                            <label for="year">Year of Birth</label>
+                            <select id="year" required aria-required="true">
+                                <option value="">Select Year</option>
+                            </select>
+                        </div>
+                        <div class="month-input">
+                            <label for="month">Month</label>
+                            <select id="month" required aria-required="true">
+                                <option value="">Select Month</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="day-input">
+                            <label for="day">Day</label>
+                            <select id="day" required aria-required="true">
+                                <option value="">Select Day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="calculate-btn" aria-label="Calculate your zodiac sign">
+                    🐲 Calculate My Sign
+                </button>
+            </form>
+
+            <div id="result" class="result-section" role="alert" aria-live="polite">
+            </div>
+        </section>
+
+        <section id="zodiac-signs" class="zodiac-signs-section" aria-labelledby="zodiac-signs-title">
+            <h2 id="zodiac-signs-title">All 12 Chinese Zodiac Signs</h2>
+            <div class="zodiac-grid" id="zodiacGrid">
+                <!-- Zodiac cards will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <section id="about" class="about-section" aria-labelledby="about-title">
+            <h2 id="about-title">About Chinese Zodiac</h2>
+            <div class="about-content">
+                <p>The Chinese zodiac, also known as Shengxiao, is a 12-year cycle in which each year is associated with a specific animal. This ancient system dates back over 2,000 years and is deeply rooted in Chinese culture and astrology.</p>
+                
+                <h3>The Legend of the Zodiac</h3>
+                <p>According to legend, the Jade Emperor held a race to determine which animals would represent the years. The clever Rat finished first by hitching a ride on the Ox, followed by the Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, and finally the Pig.</p>
+                
+                <h3>How It Works</h3>
+                <p>Your Chinese zodiac sign is determined by your birth year according to the lunar calendar. Each animal sign is believed to influence personality traits, compatibility with others, and even fortune.</p>
+                
+                <h3>The 12 Signs</h3>
+                <p>The 12 animals in order are: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, and Pig. Each sign has unique characteristics and traits that are believed to define people born in that year.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <nav class="footer-nav" aria-label="Footer navigation">
+                <a href="#calculator">Calculator</a>
+                <a href="#zodiac-signs">Zodiac Signs</a>
+                <a href="#about">About</a>
+            </nav>
+            <button class="share-btn" id="shareBtn" aria-label="Share this page">Share Your Result</button>
+            <p class="copyright">© 2024 My Chinese Zodiac. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Zodiac data with all information
+        const zodiacData = [
+            {
+                animal: 'Rat',
+                emoji: '🐭',
+                years: [1900, 1912, 1924, 1936, 1948, 1960, 1972, 1984, 1996, 2008, 2020],
+                traits: ['Intelligent', 'Adaptable', 'Charming', 'Resourceful'],
+                description: 'People born in the Year of the Rat are known for their wit, intelligence, and quick thinking. They are adaptable to any situation and have excellent problem-solving skills. Rats are charming, sociable, and resourceful, making them excellent at building networks and opportunities.'
+            },
+            {
+                animal: 'Ox',
+                emoji: '🐮',
+                years: [1901, 1913, 1925, 1937, 1949, 1961, 1973, 1985, 1997, 2009, 2021],
+                traits: ['Reliable', 'Hardworking', 'Determined', 'Patient'],
+                description: 'Oxen are known for their strength, reliability, and hardworking nature. They are determined individuals who methodically work towards their goals. With great patience and perseverance, Oxen are the backbone of any team and excel at completing difficult tasks.'
+            },
+            {
+                animal: 'Tiger',
+                emoji: '🐯',
+                years: [1902, 1914, 1926, 1938, 1950, 1962, 1974, 1986, 1998, 2010, 2022],
+                traits: ['Brave', 'Confident', 'Competitive', 'Charismatic'],
+                description: 'Tigers are known for their courage, power, and ambition. They are natural leaders who approach life with confidence and determination. Tigers are competitive but fair, and their charismatic personality draws others to them. They are unpredictable and always exciting to be around.'
+            },
+            {
+                animal: 'Rabbit',
+                emoji: '🐰',
+                years: [1903, 1915, 1927, 1939, 1951, 1963, 1975, 1987, 1999, 2011, 2023],
+                traits: ['Gentle', 'Elegant', 'Alert', 'Compassionate'],
+                description: 'Rabbits are known for their gentle, elegant, and calm nature. They are quick-witted, alert, and compassionate individuals who value peace and harmony. Rabbits are diplomatic and skilled at avoiding conflict. They have a keen eye for beauty and artistic expression.'
+            },
+            {
+                animal: 'Dragon',
+                emoji: '🐲',
+                years: [1904, 1916, 1928, 1940, 1952, 1964, 1976, 1988, 2000, 2012, 2024],
+                traits: ['Powerful', 'Confident', 'Charismatic', 'Ambitious'],
+                description: 'Dragons are the most powerful and majestic of all zodiac signs. They are confident, ambitious, and charismatic natural leaders. Dragons are never afraid of challenges and always strive for excellence. They are passionate, energetic, and have a generous spirit.'
+            },
+            {
+                animal: 'Snake',
+                emoji: '🐍',
+                years: [1905, 1917, 1929, 1941, 1953, 1965, 1977, 1989, 2001, 2013, 2025],
+                traits: ['Wise', 'Mysterious', 'Analytical', 'Elegant'],
+                description: 'Snakes are known for their wisdom, intelligence, and analytical nature. They are mysterious, elegant, and graceful individuals who prefer to observe before acting. Snakes are excellent planners and have remarkable intuition. They are private but deeply caring to those close to them.'
+            },
+            {
+                animal: 'Horse',
+                emoji: '🐴',
+                years: [1906, 1918, 1930, 1942, 1954, 1966, 1978, 1990, 2002, 2014, 2026],
+                traits: ['Energetic', 'Free-spirited', 'Optimistic', 'Cheerful'],
+                description: 'Horses are known for their boundless energy and free-spirited nature. They love adventure, freedom, and exploration. Horses are optimistic, cheerful, and popular among friends. They are skilled communicators who excel at bringing people together and inspiring others.'
+            },
+            {
+                animal: 'Goat',
+                emoji: '🐐',
+                years: [1907, 1919, 1931, 1943, 1955, 1967, 1979, 1991, 2003, 2015, 2027],
+                traits: ['Gentle', 'Creative', 'Empathetic', 'Peace-loving'],
+                description: 'Goats are gentle, creative, and compassionate individuals. They have a strong sense of empathy and always strive for harmony. Goats are artistic souls who appreciate beauty and tranquility. They are excellent listeners and make wonderful friends and partners.'
+            },
+            {
+                animal: 'Monkey',
+                emoji: '🐵',
+                years: [1908, 1920, 1932, 1944, 1956, 1968, 1980, 1992, 2004, 2016, 2028],
+                traits: ['Clever', 'Curious', 'Mischievous', 'Versatile'],
+                description: 'Monkeys are known for their cleverness, curiosity, and versatility. They are quick-witted problem solvers who love a challenge. Monkeys are playful, mischievous, and have excellent sense of humor. They adapt easily to any situation and are always learning something new.'
+            },
+            {
+                animal: 'Rooster',
+                emoji: '🐔',
+                years: [1909, 1921, 1933, 1945, 1957, 1969, 1981, 1993, 2005, 2017, 2029],
+                traits: ['Proud', 'Confident', 'Hardworking', 'Observant'],
+                description: 'Roosters are proud, confident, and hardworking individuals who take great pride in their appearance and achievements. They are observant, punctual, and detail-oriented. Roosters are natural leaders who excel at organizing and managing others with their clear vision.'
+            },
+            {
+                animal: 'Dog',
+                emoji: '🐕',
+                years: [1910, 1922, 1934, 1946, 1958, 1970, 1982, 1994, 2006, 2018, 2030],
+                traits: ['Loyal', 'Honest', 'Protective', 'Courageous'],
+                description: 'Dogs are known for their loyalty, honesty, and protective nature. They are faithful friends who will always stand by your side. Dogs are courageous and have a strong sense of justice. They are excellent problem solvers and approach life with practical wisdom.'
+            },
+            {
+                animal: 'Pig',
+                emoji: '🐖',
+                years: [1911, 1923, 1935, 1947, 1959, 1971, 1983, 1995, 2007, 2019, 2031],
+                traits: ['Compassionate', 'Generous', 'Diligent', 'Optimistic'],
+                description: 'Pigs are known for their compassion, generosity, and gentle nature. They are honest, tolerant, and always willing to help others. Pigs enjoy the simple pleasures of life and approach challenges with optimism. They are diligent workers who value harmony and peace.'
+            }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateYearDropdown();
+            populateDayDropdown();
+            generateZodiacGrid();
+            setupEventListeners();
+        });
+
+        // Populate year dropdown (1900 to current year + 10)
+        function populateYearDropdown() {
+            const yearSelect = document.getElementById('year');
+            const currentYear = new Date().getFullYear();
+            const futureLimit = currentYear + 10;
+            
+            for (let year = currentYear; year >= 1900; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        // Populate day dropdown based on selected month
+        function populateDayDropdown() {
+            const monthSelect = document.getElementById('month');
+            const daySelect = document.getElementById('day');
+            
+            monthSelect.addEventListener('change', function() {
+                const month = parseInt(this.value);
+                const year = parseInt(document.getElementById('year').value) || new Date().getFullYear();
+                const daysInMonth = getDaysInMonth(month, year);
+                
+                // Clear existing days
+                daySelect.innerHTML = '<option value="">Select Day</option>';
+                
+                // Add days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const option = document.createElement('option');
+                    option.value = day;
+                    option.textContent = day;
+                    daySelect.appendChild(option);
+                }
+            });
+        }
+
+        // Get days in month considering leap years
+        function getDaysInMonth(month, year) {
+            const daysInMonth = {
+                1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+                7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+            };
+            
+            // Check for leap year in February
+            if (month === 2 && isLeapYear(year)) {
+                return 29;
+            }
+            
+            return daysInMonth[month];
+        }
+
+        // Check if year is a leap year
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        // Generate zodiac grid cards
+        function generateZodiacGrid() {
+            const grid = document.getElementById('zodiacGrid');
+            
+            zodiacData.forEach((zodiac, index) => {
+                const card = document.createElement('div');
+                card.className = 'zodiac-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Learn more about ${zodiac.animal}`);
+                
+                const traitsHTML = zodiac.traits.map(trait => 
+                    `<span class="trait-badge">${trait}</span>`
+                ).join('');
+                
+                const yearsText = zodiac.years.slice(0, 3).join(', ') + ', ...';
+                
+                card.innerHTML = `
+                    <div class="animal-icon">${zodiac.emoji}</div>
+                    <div class="card-name">${zodiac.animal}</div>
+                    <div class="card-years">${yearsText}</div>
+                    <div class="card-traits">${traitsHTML}</div>
+                    <div class="card-description">${zodiac.description}</div>
+                `;
+                
+                // Add keyboard support
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+                
+                // Add click event to scroll to calculator and pre-select
+                card.addEventListener('click', function() {
+                    document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            const form = document.getElementById('zodiacForm');
+            form.addEventListener('submit', handleFormSubmit);
+            
+            const shareBtn = document.getElementById('shareBtn');
+            shareBtn.addEventListener('click', shareResult);
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const year = parseInt(document.getElementById('year').value);
+            const month = parseInt(document.getElementById('month').value);
+            const day = parseInt(document.getElementById('day').value);
+            
+            // Validate inputs
+            if (!year || !month || !day) {
+                showError('Please fill in all fields.');
+                return;
+            }
+            
+            if (year < 1900) {
+                showError('Please enter a year from 1900 or later.');
+                return;
+            }
+            
+            if (year > new Date().getFullYear() + 10) {
+                showError('Please enter a valid year.');
+                return;
+            }
+            
+            // Calculate zodiac
+            const zodiacIndex = (year - 4) % 12;
+            const adjustedIndex = zodiacIndex < 0 ? zodiacIndex + 12 : zodiacIndex;
+            const zodiac = zodiacData[adjustedIndex];
+            
+            displayResult(zodiac, year);
+        }
+
+        // Show error message
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result-section error show';
+            resultDiv.innerHTML = `
+                <div class="error-message">⚠️ ${message}</div>
+            `;
+        }
+
+        // Display result
+        function displayResult(zodiac, year) {
+            const resultDiv = document.getElementById('result');
+            
+            // Find the year cycle
+            const yearCycle = zodiac.years.find(y => y <= year) || zodiac.years[0];
+            const yearDifference = year - yearCycle;
+            const cycleYears = zodiac.years.map(y => y + yearDifference).filter(y => y <= year + 100);
+            const yearsText = cycleYears.slice(0, 4).join(', ');
+            
+            const traitsHTML = zodiac.traits.map(trait => 
+                `<span class="trait-badge">${trait}</span>`
+            ).join('');
+            
+            resultDiv.className = 'result-section success show';
+            resultDiv.innerHTML = `
+                <div class="zodiac-animal">${zodiac.emoji}</div>
+                <div class="zodiac-name">${zodiac.animal}</div>
+                <div class="zodiac-years">Years: ${yearsText}, ...</div>
+                <div class="zodiac-traits">${traitsHTML}</div>
+                <div class="zodiac-description">${zodiac.description}</div>
+            `;
+            
+            // Store current result for sharing
+            window.currentResult = {
+                zodiac: zodiac,
+                year: year
+            };
+            
+            // Scroll to result
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Share result
+        function shareResult() {
+            if (!window.currentResult) {
+                alert('Please calculate your zodiac sign first!');
+                return;
+            }
+            
+            const { zodiac, year } = window.currentResult;
+            const shareText = `I was born in ${year} and my Chinese zodiac is the ${zodiac.animal}! ${zodiac.traits.join(', ')} 🐲`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Chinese Zodiac',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(err => console.log('Share failed:', err));
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareText + ' ' + window.location.href)
+                    .then(() => alert('Result copied to clipboard! Share it with your friends!'))
+                    .catch(() => {
+                        // Last resort: show in a prompt
+                        prompt('Copy this to share:', shareText + ' ' + window.location.href);
+                    });
+            }
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
